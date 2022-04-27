@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import List, Set, Optional
 from dataclasses import dataclass
 import collections
-import uuid
 
 """
 Low level classes so implementing algorithm is a little bit more abstract
@@ -170,7 +169,3 @@ class Sequence:
 
         return []
 
-
-# @dataclass(frozen=True)
-# class TransactionWindows:
-#     transactions: List[Transaction]
