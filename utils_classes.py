@@ -72,7 +72,7 @@ class Transaction:
             return Transaction(without_last)
 
 
-@dataclass()
+@dataclass(frozen=True)
 class Sequence:
     transactions: List[Transaction]
 
@@ -157,22 +157,20 @@ class Sequence:
             ])
             return [within_same, separate]
 
-        if first_without_first == second_without_last:  # for > 2
+        if first_without_first == second_without_last:  # for i > 2
             if len(second.transactions[-1].items) == 1:
                 new_transactions = first.transactions + [second.transactions[-1]]
-                return [Sequence(new_transactions)]  # ... + ...(c) => ...(c)
+                return [Sequence(new_transactions)]
             else:
                 first_last_transaction = first.transactions[-1]
                 second_last_item = second.transactions[-1].items[-1]
                 new_last_transaction = Transaction(first_last_transaction.items + [second_last_item])
                 new_transactions = first.transactions[:-1] + [new_last_transaction]
-                return [Sequence(new_transactions)]  # ... + ...(...c) => ...(...c)
+                return [Sequence(new_transactions)]
 
         return []
 
-#
+
 # @dataclass(frozen=True)
-# class Record:
-#     sequence: Sequence
-#     time: int
-#     id: uuid
+# class TransactionWindows:
+#     transactions: List[Transaction]
