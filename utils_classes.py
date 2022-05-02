@@ -159,5 +159,28 @@ class SequenceCandidate:
         return []  # cannot be generated
 
     def generate_contiguous_subsequences(self) -> List[SequenceCandidate]:
-        return []
+        subsequences = set()
+        for i in range(len(self.elements)):
+            if i != 0 and i != len(self.elements) - 1:
+                if len(self.elements[i]) < 2:
+                    break
+            for j in range(len(self.elements[i])):
+                copied = self.elements[i].items.copy()
+                copied.pop(j)
+                if len(copied) == 0:
+                    ss_trans = self.elements[0:i] + self.elements[i + 1:]
+                else:
+                    ss_trans = self.elements[0:i] + [Element(copied)] + self.elements[i + 1:]
+
+                subsequences.add(SequenceCandidate(ss_trans))
+        return list(subsequences)
+
+    def flatten(self) -> List[Item]:
+        result = []
+        for el in self.elements:
+            for it in el.items:
+                result.append(it)
+        return result
+
+    def is_supported_by(self, data_sequence: Sequence) -> bool:
         pass

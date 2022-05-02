@@ -25,13 +25,13 @@ def convert_list(raw_sequences):
 if __name__ == '__main__':
     input_seqs = [
         [
-            (2, [1, 2, 3, 4]), (10, [1, 5])
+            (2, [1, 2, 3, 4]), (10, [1, 3, 4])
         ],
         [
-            (5, [1, 2, 3])
+            (5, [1, 2, 3], (1, [3, 4]))
         ],
         [
-            (5, [1, 2])
+            (5, [1, 2], (3, [3, 4]))
         ],
         [
             (5, [1, 2, 3])
@@ -41,9 +41,6 @@ if __name__ == '__main__':
     result = GSP.run(
         data,
         min_supp=3,
-        window_size=20,
-        min_gap=10,
-        max_gap=100,
         min_return_length=3
     )
 

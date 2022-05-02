@@ -1,5 +1,8 @@
 from typing import Dict
+
+from consts import MIN_GAP, MAX_GAP, WINDOWS_SIZE
 from utils_classes import *
+from hash_tree import HashTree
 
 
 class GSP:
@@ -7,9 +10,6 @@ class GSP:
     def run(
             data_sequences: List[Sequence],
             min_supp: int,
-            window_size: int,
-            min_gap: int,
-            max_gap: int,
             min_return_length: int = 2
     ) -> List[SequenceCandidate]:
         candidates = GSP._first_pass(data_sequences, min_supp)
@@ -17,9 +17,14 @@ class GSP:
         while len(candidates) != 0:
             previous_candidates = candidates
 
+            # 3.1 Candidate Generation
             generated = GSP._generate_candidates(candidates)
             print(f"generated: {generated}")
             pruned = GSP._prune_candidate_supports(previous_candidates, generated)
+
+            # 3.2 Counting Candidates
+            hash_tree = HashTree(pruned)
+            hash_tree.count_support(data_sequences)
             break
         return candidates
 
