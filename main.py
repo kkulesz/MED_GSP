@@ -8,9 +8,9 @@ def convert_list(raw_sequences):
         transactions: List[Transaction] = []
         for raw_transaction in raw_sequence:
             time = raw_transaction[0]
-            items: Set[Item] = set()
+            items: List[Item] = []
             for raw_item in raw_transaction[1]:
-                items.add(Item(raw_item))
+                items.append(Item(raw_item))
             if len(items) == 0:
                 break
             transactions.append(Transaction(time, items))
@@ -25,26 +25,22 @@ def convert_list(raw_sequences):
 if __name__ == '__main__':
     input_seqs = [
         [
-            (2, [1, 2, 3, 4]), (10, [1, 3, 4])
+            (3, [1, 2, 3]), (4, [1]), (5, [1])
         ],
         [
-            (5, [1, 2, 3], (1, [3, 4]))
+            (3, [1, 2, 3]), (4, [1]), (5, [1])
         ],
         [
-            (5, [1, 2], (3, [3, 4]))
-        ],
-        [
-            (5, [1, 2, 3])
+            (3, [1]), (4, [1])
         ]
     ]
     data = convert_list(input_seqs)
     result = GSP.run(
         data,
-        min_supp=3,
+        min_supp=2,
         min_return_length=3
     )
 
-    print('~' * 100)
     print('RESULT:')
     for r in result:
         print(r)

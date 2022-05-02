@@ -1,8 +1,9 @@
+from __future__ import annotations
 from typing import Dict, List
 from abc import ABC, abstractmethod
 
 from utils_classes import *
-from consts import MODULO_VALUE, LEAF_CAPACITY
+from consts import MODULO_VALUE, LEAF_CAPACITY, WINDOW_SIZE, MAX_GAP
 
 
 def hash_function(item: Item) -> int:
@@ -20,12 +21,20 @@ class HashTree:
             if c not in self.candidates:
                 self._add_sequence(c)
                 self.candidates.add(c)
-        print(self.candidates)
+        # print(self.candidates)
 
     def count_support(self, data_sequences: List[Sequence]) -> List[Tuple[SequenceCandidate, int]]:
         supports = dict.fromkeys(self.candidates, 0)
         for data_seq in data_sequences:
-            pass
+            possible_leaves: Set[LeafNode] = set()
+            for i in range(len(data_seq)):
+                item, its_time = data_seq[i]
+                self.root.gather_leaves(data_seq, item, its_time, possible_leaves)
+            for leaf in possible_leaves:
+                for candidate in leaf.candidates:
+                    if candidate.is_supported_by(data_seq):
+                        supports[candidate] += 1
+
         return [(candidate, supp_val) for candidate, supp_val in supports.items()]
 
     def _add_sequence(self, candidate: SequenceCandidate):
@@ -41,16 +50,6 @@ class Node(ABC):
 
     @abstractmethod
     def add(self, candidate: SequenceCandidate):
-        pass
-
-    @abstractmethod
-    def count_support(
-            self,
-            data_seq: Sequence,
-            item: Item,
-            time: int,
-            supports: Dict[SequenceCandidate, int]
-    ):
         pass
 
     @abstractmethod
@@ -85,14 +84,24 @@ class InteriorNode(Node):
             leaf.add(candidate)
             self.children[hash_value] = leaf
 
-    def count_support(
+    def gather_leaves(
             self,
             data_seq: Sequence,
             item: Item,
             time: int,
-            supports: Dict[SequenceCandidate, int]
+            supports: Set[LeafNode]
     ):
-        pass
+        for idx in range(len(data_seq)):
+            it, its_time = data_seq[idx]
+            if item == it and time == its_time:
+                continue
+            if time - WINDOW_SIZE <= its_time <= time + max(WINDOW_SIZE, MAX_GAP):
+                hash_value = hash_function(it)
+                node = self.children[hash_value]
+                if isinstance(node, InteriorNode):
+                    node.gather_leaves(data_seq, it, time, supports)
+                elif isinstance(node, LeafNode):
+                    supports.add(node)
 
     def print(self):
         print(f"Interior node depth={self.depth}")
@@ -121,8 +130,6 @@ class LeafNode(Node):
     def count_support(
             self,
             data_seq: Sequence,
-            item: Item,
-            time: int,
             supports: Dict[SequenceCandidate, int]
     ):
         for candidate in self.candidates:
