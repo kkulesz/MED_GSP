@@ -227,7 +227,7 @@ class SequenceCandidate:
             if window is None:
                 return False  # No element found after specified time => sequence DOES NOT support candidate
 
-            if len(found) == 0 or found[-1][1].to - window.since < MAX_GAP:
+            if len(found) == 0 or window.to - found[-1][1].since < MAX_GAP:
                 # forward pass
                 found.append((next_element, window))
                 find_after = window.to + MIN_GAP + 1
@@ -238,7 +238,7 @@ class SequenceCandidate:
                 # backward pass
                 last = found[-1]
                 next_element = last[0]
-                find_after = window.to - MAX_GAP + 1
+                find_after = window.to - MAX_GAP
                 found = found[0: -1]
 
     def find_element(
