@@ -62,10 +62,13 @@ if __name__ == '__main__':
         ],
         [
             (3, [1, 2]), (4, [1])
+        ],
+        [
+            (3, [1, 2]), (1000, [1])
         ]
     ]
     data = convert_list(input_seqs)
-    data = from_file(file_2)
+    # data = from_file(file_1)
     data = data[0:MAX_NUMBER_OF_SEQUENCES]
 
     startTime = time.time()

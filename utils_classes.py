@@ -80,8 +80,9 @@ class Sequence:
             new_items = []
             for it in t.items:
                 if it == item and t.time == its_time and not found:
-                    new_items.append(it)
                     found = True
+                    continue
+                new_items.append(it)
             if len(new_items) != 0:
                 new_transactions.append(Transaction(t.time, new_items))
 

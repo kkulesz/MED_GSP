@@ -32,7 +32,7 @@ class GSP:
 
             supportive_sequences_set = set()
             candidates_with_support = hash_tree.count_support(data_sequences, supportive_sequences_set)
-            print(f'with support = {candidates_with_support}')
+            print(f'With support = {candidates_with_support}')
             data_sequences = list(supportive_sequences_set)
 
             candidates = [v[0] for v in candidates_with_support if v[1] >= min_supp]
