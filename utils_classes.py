@@ -71,7 +71,21 @@ class Sequence:
             if idx < len(tr):
                 return tr[idx], tr.time
             idx = idx - len(tr)
-        raise ("invalid index")
+        raise Exception(f"Invalid index. length={len(self)}, index={idx}")
+
+    def without_item(self, item: Item, its_time: int) -> Optional[Sequence]:
+        found = False
+        new_transactions = []
+        for t in self.transactions:
+            new_items = []
+            for it in t.items:
+                if it == item and t.time == its_time and not found:
+                    new_items.append(it)
+                    found = True
+            if len(new_items) != 0:
+                new_transactions.append(Transaction(t.time, new_items))
+
+        return Sequence(new_transactions) if len(new_transactions) > 0 else None
 
 
 # =======================================================
@@ -266,7 +280,7 @@ class SequenceCandidate:
             still_in_window, not_in_window_anymore = [], []
             for x in found:
                 _, x_time = x
-                if time-WINDOW_SIZE <= x_time <= time+WINDOW_SIZE:
+                if time - WINDOW_SIZE <= x_time <= time + WINDOW_SIZE:
                     still_in_window.append(x)
                 else:
                     not_in_window_anymore.append(x)
@@ -284,4 +298,3 @@ class SequenceCandidate:
 
         times = list(map(lambda x: x[1], found))
         return Window(min(times), max(times))
-

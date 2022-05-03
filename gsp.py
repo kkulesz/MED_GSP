@@ -17,18 +17,22 @@ class GSP:
         result = []
         while len(candidates) != 0:
             candidate_length += 1
-            print('=' * 100 + f'\nIteration nr {candidate_length}.')
+            print('=' * 100 + f'\nIteration nr {candidate_length}.:')
+            print(f'Number of candidates: {len(candidates)}')
             previous_candidates = candidates
 
             # 3.1 Candidate Generation
-            generated = GSP._generate_candidates(candidates)
+            generated = GSP._generate_candidates(previous_candidates)
+            print(f'Number of generated candidates: {len(generated)}')
             pruned = GSP._prune_candidates(previous_candidates, generated)
 
             # 3.2 Counting Candidates
             hash_tree = HashTree(pruned)
+            # hash_tree.print()
 
             supportive_sequences_set = set()
             candidates_with_support = hash_tree.count_support(data_sequences, supportive_sequences_set)
+            print(f'with support = {candidates_with_support}')
             data_sequences = list(supportive_sequences_set)
 
             candidates = [v[0] for v in candidates_with_support if v[1] >= min_supp]

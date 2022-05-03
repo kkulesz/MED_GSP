@@ -14,10 +14,12 @@ class InteriorNode(Node):
 
     def add(self, candidate: SequenceCandidate):
         flattened = candidate.flatten()
+        # print(f'flattened={flattened}')
+        # print(f'depth={self.depth}')
         hash_value = hash_function(flattened[self.depth])
         node = self.children[hash_value]
         if isinstance(node, LeafNode):
-            if node.exceeds_after_add(candidate) and len(flattened) >= self.depth:
+            if node.exceeds_after_add(candidate) and len(flattened) > self.depth + 1:
                 new_interior = InteriorNode(self.depth + 1)
                 for c in node.candidates:
                     new_interior.add(c)
@@ -41,10 +43,9 @@ class InteriorNode(Node):
             time: int,
             supports: Set[LeafNode]
     ):
+        data_seq = data_seq.without_item(item, time)  # so we do not hash with the same item twice
         for idx in range(len(data_seq)):
             it, its_time = data_seq[idx]
-            if item == it and time == its_time:
-                continue
             if time - WINDOW_SIZE <= its_time <= time + max(WINDOW_SIZE, MAX_GAP):
                 hash_value = hash_function(it)
                 node = self.children[hash_value]

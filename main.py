@@ -1,6 +1,7 @@
 import time
 from itertools import groupby
 
+from consts import MAX_NUMBER_OF_SEQUENCES
 from gsp import GSP
 from utils_classes import *
 
@@ -64,8 +65,8 @@ if __name__ == '__main__':
         ]
     ]
     data = convert_list(input_seqs)
-    # data = from_file(file_2)
-    # data = data[0:100]
+    data = from_file(file_2)
+    data = data[0:MAX_NUMBER_OF_SEQUENCES]
 
     startTime = time.time()
     result = GSP.run(
@@ -78,4 +79,4 @@ if __name__ == '__main__':
     print('RESULT:')
     for r in result:
         print(r)
-    print('Execution time in seconds: ' + str(executionTime))
+    print('Execution time: {:,.3f}s'.format(executionTime))
