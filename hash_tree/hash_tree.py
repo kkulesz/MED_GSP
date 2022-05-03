@@ -12,7 +12,11 @@ class HashTree:
         self.candidates: Set[SequenceCandidate] = set()
         self._create(candidates)
 
-    def count_support(self, data_sequences: List[Sequence], supportive_sequences: Set[Sequence]) -> List[Tuple[SequenceCandidate, int]]:
+    def count_support(
+            self,
+            data_sequences: List[Sequence],
+            supportive_sequences: Set[Sequence]
+    ) -> List[Tuple[SequenceCandidate, int]]:
         supports = dict.fromkeys(self.candidates, 0)
         for data_seq in data_sequences:
             possible_leaves: Set[LeafNode] = set()

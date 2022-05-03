@@ -55,7 +55,7 @@ class InteriorNode(Node):
                     supports.add(node)
 
     def print(self):
-        print(f"Interior node depth={self.depth}")
+        print("  " * self.depth + f"Interior({self.depth}):")
         for n in self.children:
             if isinstance(n, Node):
                 n.print()

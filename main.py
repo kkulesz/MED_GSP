@@ -68,13 +68,13 @@ if __name__ == '__main__':
         ]
     ]
     data = convert_list(input_seqs)
-    # data = from_file(file_1)
+    data = from_file(file_1)
     data = data[0:MAX_NUMBER_OF_SEQUENCES]
 
     startTime = time.time()
     result = GSP.run(
         data,
-        min_supp=2,
+        min_supp=5,
         min_return_length=3
     )
     executionTime = (time.time() - startTime)

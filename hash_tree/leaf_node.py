@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from hash_tree.node import Node
-from utils_classes import SequenceCandidate, Item, Sequence
+from utils_classes import SequenceCandidate, Item
 from consts import LEAF_CAPACITY
 
 
@@ -23,5 +23,4 @@ class LeafNode(Node):
         return not contains and len(self.flattened) == LEAF_CAPACITY
 
     def print(self):
-        print(f"leaf({self.depth})={self.candidates}")
-
+        print("  " * self.depth + f"leaf({self.depth})={self.candidates}")
