@@ -224,6 +224,7 @@ class SequenceCandidate:
                 item_to_times_dict[item].append(its_time)
             else:
                 item_to_times_dict[item] = [its_time]
+
         find_after = -1
         found: List[Tuple[Element, Window]] = []
         next_element: Element = self.elements[0]
@@ -264,7 +265,7 @@ class SequenceCandidate:
 
             still_in_window, not_in_window_anymore = [], []
             for x in found:
-                x_time = x[1]
+                _, x_time = x
                 if time-WINDOW_SIZE <= x_time <= time+WINDOW_SIZE:
                     still_in_window.append(x)
                 else:
@@ -274,6 +275,12 @@ class SequenceCandidate:
             items_again_to_find = list(map(lambda x: x[0], not_in_window_anymore))
             to_find.update(items_again_to_find)
             find_after = max(find_after, time - WINDOW_SIZE)
+
+        # for f in found:
+        #     item, its_time = f
+        #     times = item_to_times_dict[item]
+        #     just_later = list(map(lambda t: t >= its_time, times))
+        #     item_to_times_dict[item] = just_later
 
         times = list(map(lambda x: x[1], found))
         return Window(min(times), max(times))
