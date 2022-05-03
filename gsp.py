@@ -1,5 +1,7 @@
-from utils_classes import *
-from hash_tree import HashTree
+from typing import List, Dict, Set
+
+from utils_classes import Sequence, SequenceCandidate, Element, Item
+from hash_tree.hash_tree import HashTree
 
 
 class GSP:
@@ -13,8 +15,10 @@ class GSP:
 
         candidate_length = 1
         result = []
+
         while len(candidates) != 0:
             candidate_length += 1
+            print('=' * 100 + f'\nIteration nr {candidate_length}.')
             previous_candidates = candidates
 
             # 3.1 Candidate Generation
@@ -26,7 +30,9 @@ class GSP:
             # 3.2 Counting Candidates
             hash_tree = HashTree(pruned)
             # hash_tree.print()
-            candidates_with_support = hash_tree.count_support(data_sequences)
+            supportive_sequences_set = set()
+            candidates_with_support = hash_tree.count_support(data_sequences, supportive_sequences_set)
+            data_sequences = list(supportive_sequences_set)
             # print(f"candidates with support = {candidates_with_support}")
             candidates = [v[0] for v in candidates_with_support if v[1] >= min_supp]
             # print(f"new candidates= {candidates}")

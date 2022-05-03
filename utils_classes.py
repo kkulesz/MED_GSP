@@ -39,6 +39,9 @@ class Transaction:
         self.time = time
         self.items = items
 
+    def __hash__(self):
+        return hash(tuple(self.items)) + hash(self.time)
+
     def __lt__(self, other):
         return self.time < other.time
 
@@ -56,6 +59,9 @@ class Sequence:
     def __init__(self, transactions: List[Transaction]):
         transactions.sort()
         self.transactions = transactions
+
+    def __hash__(self):
+        return hash(tuple(self.transactions))
 
     def __len__(self):
         return sum(len(t) for t in self.transactions)
@@ -218,7 +224,6 @@ class SequenceCandidate:
                 item_to_times_dict[item].append(its_time)
             else:
                 item_to_times_dict[item] = [its_time]
-
         find_after = -1
         found: List[Tuple[Element, Window]] = []
         next_element: Element = self.elements[0]
@@ -226,8 +231,7 @@ class SequenceCandidate:
             window = self.find_element(next_element, item_to_times_dict, find_after)
             if window is None:
                 return False  # No element found after specified time => sequence DOES NOT support candidate
-
-            if len(found) == 0 or window.to - found[-1][1].since < MAX_GAP:
+            if len(found) == 0 or window.to - found[-1][1].since <= MAX_GAP:
                 # forward pass
                 found.append((next_element, window))
                 find_after = window.to + MIN_GAP + 1
@@ -274,9 +278,3 @@ class SequenceCandidate:
         times = list(map(lambda x: x[1], found))
         return Window(min(times), max(times))
 
-
-
-        # for element in self.elements:
-        #     window = self.find_element_after(element, item_to_times_dict, find_after)
-        #     if window is None:
-        #         return False

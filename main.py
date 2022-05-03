@@ -1,10 +1,11 @@
 import time
+from itertools import groupby
 
 from gsp import GSP
 from utils_classes import *
 
 
-def convert_list(raw_sequences):
+def convert_list(raw_sequences) -> List[Sequence]:
     result_sequences: List[Sequence] = []
     for raw_sequence in raw_sequences:
         transactions: List[Transaction] = []
@@ -24,6 +25,32 @@ def convert_list(raw_sequences):
     return result_sequences
 
 
+def from_file(filepath):
+    f = open(filepath, 'r')
+    file_str = f.read()
+    ints = [int(ele) for ele in file_str.split()]
+
+    split_at = -2  # '-2' is delimiter between sequences
+    raw_sequences_ints = [list(g) for k, g in groupby(ints, lambda x: x != split_at) if k]
+    sequences = []
+    for sequence_ints in raw_sequences_ints:
+        split_at = -1  # '-1' is delimiter between transactions
+        raw_transactions_ints = [list(g) for k, g in groupby(sequence_ints, lambda x: x != split_at) if k]
+
+        transactions = []
+        transaction_time = 0
+        for raw_t in raw_transactions_ints:
+            items = list(map(lambda i: Item(i), raw_t))
+            transaction_time += 5
+            transactions.append(Transaction(transaction_time, items))
+        sequences.append(Sequence(transactions))
+
+    return sequences
+
+
+file_1 = 'data/BMS1_spmf.txt'
+file_2 = 'data/MT745584_SPMF.txt'
+
 if __name__ == '__main__':
     input_seqs = [
         [
@@ -37,6 +64,8 @@ if __name__ == '__main__':
         ]
     ]
     data = convert_list(input_seqs)
+    # data = from_file(file_2)
+    # data = data[0:100]
 
     startTime = time.time()
     result = GSP.run(
@@ -50,5 +79,3 @@ if __name__ == '__main__':
     for r in result:
         print(r)
     print('Execution time in seconds: ' + str(executionTime))
-
-    # print(SequenceCandidate([Element([Item(2), Item(1), Item(2)]), Element([Item(3)])]))
