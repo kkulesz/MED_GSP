@@ -42,8 +42,6 @@ class InteriorNode(Node):
             supports: Set[LeafNode]
     ):
         data_seq = data_seq.without_item(item, time)  # so we do not hash with the same item twice
-        if data_seq is None:
-            return  # TODO
         for idx in range(len(data_seq)):
             it, its_time = data_seq[idx]
             if time - WINDOW_SIZE <= its_time <= time + max(WINDOW_SIZE, MAX_GAP):

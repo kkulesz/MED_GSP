@@ -86,7 +86,7 @@ class Sequence:
             if len(new_items) != 0:
                 new_transactions.append(Transaction(t.time, new_items))
 
-        return Sequence(new_transactions) if len(new_transactions) > 0 else None
+        return Sequence(new_transactions)
 
 
 # =======================================================
