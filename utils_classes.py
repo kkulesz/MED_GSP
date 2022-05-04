@@ -39,6 +39,14 @@ class Transaction:
         self.time = time
         self.items = items
 
+    def __repr__(self):
+        s = [str(i) for i in self.items]
+        return f"({self.time}: {', '.join(s)})"
+
+    def __str__(self):
+        s = [str(i) for i in self.items]
+        return f"({self.time}: {', '.join(s)})"
+
     def __hash__(self):
         return hash(tuple(self.items)) + hash(self.time)
 
@@ -55,13 +63,23 @@ class Transaction:
 @dataclass
 class Sequence:
     transactions: List[Transaction]
+    id: uuid  # so hashing gives different values for the same transaction set
 
     def __init__(self, transactions: List[Transaction]):
         transactions.sort()
         self.transactions = transactions
+        self.id = uuid.uuid1()
+
+    def __repr__(self):
+        s = [str(i) for i in self.transactions]
+        return f"({', '.join(s)})"
+
+    def __str__(self):
+        s = [str(i) for i in self.transactions]
+        return f"({', '.join(s)})"
 
     def __hash__(self):
-        return hash(tuple(self.transactions))
+        return hash(tuple(self.transactions)) + hash(self.id)
 
     def __len__(self):
         return sum(len(t) for t in self.transactions)

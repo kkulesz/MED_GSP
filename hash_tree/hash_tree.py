@@ -34,11 +34,8 @@ class HashTree:
     def _create(self, candidates: List[SequenceCandidate]):
         for c in candidates:
             if c not in self.candidates:
-                self._add_sequence(c)
+                self.root.add(c)
                 self.candidates.add(c)
-
-    def _add_sequence(self, candidate: SequenceCandidate):
-        self.root.add(candidate)
 
     def print(self):
         self.root.print()
