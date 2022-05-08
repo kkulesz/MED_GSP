@@ -1,7 +1,8 @@
-from typing import Dict, List
+from typing import List
 
+from data_classes.sequence_candidate import SequenceCandidate
+from data_classes.item import Item
 from hash_tree.node import Node
-from utils_classes import SequenceCandidate, Item
 from consts import LEAF_CAPACITY
 
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from utils_classes import SequenceCandidate
+from data_classes.sequence_candidate import SequenceCandidate
 
 
 class Node(ABC):

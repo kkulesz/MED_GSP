@@ -3,7 +3,8 @@ from typing import List, Set, Tuple
 
 from hash_tree.interior_node import InteriorNode
 from hash_tree.leaf_node import LeafNode
-from utils_classes import SequenceCandidate, Sequence
+from data_classes.sequence_candidate import SequenceCandidate
+from data_classes.sequence import Sequence
 
 
 class HashTree:

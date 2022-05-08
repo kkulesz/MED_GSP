@@ -1,4 +1,4 @@
-from utils_classes import Item
+from data_classes.item import Item
 from consts import MODULO_VALUE
 
 

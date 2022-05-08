@@ -1,6 +1,8 @@
 from typing import List, Dict, Set
 
-from utils_classes import Sequence, SequenceCandidate, Element, Item
+from data_classes.item import Item
+from data_classes.sequence import Sequence
+from data_classes.sequence_candidate import SequenceCandidate, Element
 from hash_tree.hash_tree import HashTree
 
 

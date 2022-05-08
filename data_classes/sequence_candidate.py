@@ -3,111 +3,13 @@ from typing import List, Set, Optional, Tuple, Dict
 from dataclasses import dataclass
 from collections import OrderedDict
 import collections
-import uuid
 
 from consts import MAX_GAP, MIN_GAP, WINDOW_SIZE
 
-
-@dataclass
-class Item:
-    data: any
-
-    def __repr__(self):
-        return f"{self.data}"
-
-    def __str__(self):
-        return f"{self.data}"
-
-    def __hash__(self):
-        return hash(self.data)
-
-    # def __eq__(self, other):
-    #     return self.data == other.data
-
-    def __lt__(self, other):
-        return self.data < other.data
+from data_classes.item import Item
+from data_classes.sequence import Sequence
 
 
-@dataclass
-class Transaction:
-    time: int
-    items: List[Item]
-
-    def __init__(self, time, items: List[Item]):
-        items.sort()
-        # TODO: remove duplicates?
-        self.time = time
-        self.items = items
-
-    def __repr__(self):
-        s = [str(i) for i in self.items]
-        return f"({self.time}: {', '.join(s)})"
-
-    def __str__(self):
-        s = [str(i) for i in self.items]
-        return f"({self.time}: {', '.join(s)})"
-
-    def __hash__(self):
-        return hash(tuple(self.items)) + hash(self.time)
-
-    def __lt__(self, other):
-        return self.time < other.time
-
-    def __len__(self):
-        return len(self.items)
-
-    def __getitem__(self, idx):
-        return self.items[idx]
-
-
-@dataclass
-class Sequence:
-    transactions: List[Transaction]
-    id: uuid  # so hashing gives different values for the same transaction set
-
-    def __init__(self, transactions: List[Transaction]):
-        transactions.sort()
-        self.transactions = transactions
-        self.id = uuid.uuid1()
-
-    def __repr__(self):
-        s = [str(i) for i in self.transactions]
-        return f"({', '.join(s)})"
-
-    def __str__(self):
-        s = [str(i) for i in self.transactions]
-        return f"({', '.join(s)})"
-
-    def __hash__(self):
-        return hash(tuple(self.transactions)) + hash(self.id)
-
-    def __len__(self):
-        return sum(len(t) for t in self.transactions)
-
-    def __getitem__(self, idx) -> Tuple[Item, int]:
-        for tr in self.transactions:
-            if idx < len(tr):
-                return tr[idx], tr.time
-            idx = idx - len(tr)
-        raise Exception(f"Invalid index. length={len(self)}, index={idx}")
-
-    def without_item(self, item: Item, its_time: int) -> Optional[Sequence]:
-        found = False
-        new_transactions = []
-        for t in self.transactions:
-            new_items = []
-            for it in t.items:
-                if it == item and t.time == its_time and not found:
-                    found = True
-                    continue
-                new_items.append(it)
-            if len(new_items) != 0:
-                new_transactions.append(Transaction(t.time, new_items))
-
-        return Sequence(new_transactions)
-
-
-# =======================================================
 @dataclass
 class Window:
     since: int
@@ -264,13 +166,15 @@ class SequenceCandidate:
         while True:
             window = self.find_element(next_element, item_to_times_dict, find_after)
             if window is None:
-                return False  # No element found after specified time => sequence DOES NOT support candidate
+                # No element found after specified time => sequence DOES NOT support candidate
+                return False
             if len(found) == 0 or window.to - found[-1][1].since <= MAX_GAP:
                 # forward pass
                 found.append((next_element, window))
                 find_after = window.to + MIN_GAP + 1
                 if len(found) == len(self.elements):
-                    return True  # All elements were found and they meet GSP's restrictions => sequence DOES support candidate
+                    # All elements were found and they meet GSP's restrictions => sequence DOES support candidate
+                    return True
                 next_element = self.elements[len(found)]
             else:
                 # backward pass
@@ -308,12 +212,6 @@ class SequenceCandidate:
             items_again_to_find = list(map(lambda x: x[0], not_in_window_anymore))
             to_find.update(items_again_to_find)
             find_after = max(find_after, time - WINDOW_SIZE)
-
-        # for f in found:
-        #     item, its_time = f
-        #     times = item_to_times_dict[item]
-        #     just_later = list(map(lambda t: t >= its_time, times))
-        #     item_to_times_dict[item] = just_later
 
         times = list(map(lambda x: x[1], found))
         return Window(min(times), max(times))

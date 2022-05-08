@@ -1,6 +1,7 @@
 from typing import List
 
-from utils_classes import SequenceCandidate, Item, Element
+from data_classes.sequence_candidate import SequenceCandidate, Element
+from data_classes.item import Item
 from hash_tree.hash_tree import HashTree
 
 

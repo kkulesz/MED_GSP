@@ -1,9 +1,11 @@
 import time
 from itertools import groupby
+from typing import List
 
+from data_classes.item import Item
+from data_classes.sequence import Sequence, Transaction
 from consts import MAX_NUMBER_OF_SEQUENCES, MIN_SUPPORT
 from gsp import GSP
-from utils_classes import *
 
 
 def convert_list(raw_sequences) -> List[Sequence]:
@@ -55,16 +57,16 @@ file_2 = 'data/MT745584_SPMF.txt'
 if __name__ == '__main__':
     input_seqs = [
         [
-            (3, [1, 2]), (4, [1]), (12, [1])
+            (3, [1, 2]), (4, [3]), (12, [4])
         ],
         [
-            (3, [1, 2]), (4, [1]), (12, [1])
+            (3, [1, 2]), (4, [3]), (12, [4])
         ],
         [
-            (3, [1, 2]), (4, [1])
+            (3, [1, 2]), (4, [3])
         ],
         [
-            (3, [1, 2]), (1000, [1])
+            (3, [1, 2]), (1000, [3])
         ],
         [
             (1, [1])

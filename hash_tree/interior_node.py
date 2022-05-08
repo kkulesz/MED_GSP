@@ -1,9 +1,11 @@
 from typing import List, Optional, Set
 
+from data_classes.sequence_candidate import SequenceCandidate
+from data_classes.sequence import Sequence
+from data_classes.item import Item
 from hash_tree.hash_function import hash_function
 from hash_tree.node import Node
 from hash_tree.leaf_node import LeafNode
-from utils_classes import SequenceCandidate, Item, Sequence
 from consts import MODULO_VALUE, WINDOW_SIZE, MAX_GAP
 
 
@@ -41,7 +43,8 @@ class InteriorNode(Node):
             time: int,
             supports: Set[LeafNode]
     ):
-        data_seq = data_seq.without_item(item, time)  # so we do not hash with the same item twice
+        if self.depth != 0:
+            data_seq = data_seq.without_item(item, time)  # so we do not hash with the same item twice
         for idx in range(len(data_seq)):
             it, its_time = data_seq[idx]
             if time - WINDOW_SIZE <= its_time <= time + max(WINDOW_SIZE, MAX_GAP):
