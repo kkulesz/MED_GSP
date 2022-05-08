@@ -21,9 +21,7 @@ class HashTree:
         supports = dict.fromkeys(self.candidates, 0)
         for data_seq in data_sequences:
             possible_leaves: Set[LeafNode] = set()
-            for i in range(len(data_seq)):
-                item, its_time = data_seq[i]
-                self.root.gather_leaves(data_seq, item, its_time, possible_leaves)
+            self.root.start_gathering_leaves(data_seq, possible_leaves)
             for leaf in possible_leaves:
                 for candidate in leaf.candidates:
                     if candidate.is_supported_by(data_seq):

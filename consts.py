@@ -3,7 +3,7 @@ WINDOW_SIZE = 0
 MIN_GAP = 0
 MAX_GAP = 5
 
-MIN_SUPPORT = 3
+MIN_SUPPORT = 5
 
 # HashTree params
 MODULO_VALUE = 1000

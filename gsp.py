@@ -19,7 +19,7 @@ class GSP:
         result = []
         while len(candidates) != 0:
             candidate_length += 1
-            print('=' * 100 + f'\nIteration nr {candidate_length}.:')
+            print('=' * 100 + f'\nIteration nr {candidate_length}:')
             print(f'Number of candidates: {len(candidates)}')
             previous_candidates = candidates
 

@@ -36,6 +36,16 @@ class InteriorNode(Node):
             new_leaf.add(candidate)
             self.children[hash_value] = new_leaf
 
+    def start_gathering_leaves(self, data_seq, supports: Set[LeafNode]):
+        for idx in range(len(data_seq)):
+            it, its_time = data_seq[idx]
+            hash_value = hash_function(it)
+            node = self.children[hash_value]
+            if isinstance(node, InteriorNode):
+                node.gather_leaves(data_seq, it, its_time, supports)
+            elif isinstance(node, LeafNode):
+                supports.add(node)
+
     def gather_leaves(
             self,
             data_seq: Sequence,
@@ -43,8 +53,7 @@ class InteriorNode(Node):
             time: int,
             supports: Set[LeafNode]
     ):
-        if self.depth != 0:
-            data_seq = data_seq.without_item(item, time)  # so we do not hash with the same item twice
+        data_seq = data_seq.without_item(item, time)  # so we do not hash with the same item twice
         for idx in range(len(data_seq)):
             it, its_time = data_seq[idx]
             if time - WINDOW_SIZE <= its_time <= time + max(WINDOW_SIZE, MAX_GAP):
