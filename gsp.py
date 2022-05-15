@@ -13,16 +13,21 @@ class GSP:
             min_supp: int,
             min_return_length: int = 2
     ):
-        candidates = GSP._first_pass(data_sequences, min_supp)
+        candidates_with_support = GSP._first_pass(data_sequences, min_supp)
 
         candidate_length = 1
         result = []
-        while len(candidates) != 0:
+        while len(candidates_with_support) != 0:
+            with_min_supp = [v for v in candidates_with_support if v[1] >= min_supp]
+            if candidate_length >= min_return_length:
+                result.extend(with_min_supp)
+
             candidate_length += 1
             print('=' * 100 + f'\nIteration nr {candidate_length}:')
-            print(f'Number of candidates: {len(candidates)}')
-            previous_candidates = candidates
+            print(f'Number of candidates: {len(candidates_with_support)}')
 
+            candidates = [v[0] for v in with_min_supp]
+            previous_candidates = candidates
             # 3.1 Candidate Generation
             generated = GSP._generate_candidates(previous_candidates)
             print(f'Number of generated candidates: {len(generated)}')
@@ -40,17 +45,13 @@ class GSP:
             print(f'Number of supportive sequences: {len(data_sequences)}')
             # for s in data_sequences:
             #     print(f'   {s}')
-
-            candidates = [v[0] for v in candidates_with_support if v[1] >= min_supp]
-            if candidate_length >= min_return_length:
-                result.append(candidates)
         return result
 
     @staticmethod
     def _first_pass(
             data_sequences: List[Sequence],
             min_support: int
-    ) -> List[SequenceCandidate]:
+    ):
         item_support: Dict[Item, int] = {}
         for seq in data_sequences:
             visited = set()
@@ -64,9 +65,8 @@ class GSP:
                     else:
                         item_support[item] += 1
 
-        tuples = [(pos, supp_val) for pos, supp_val in item_support.items()]
-        items_with_min_support = [v[0] for v in tuples if v[1] >= min_support]
-        return list(map(lambda it: SequenceCandidate([Element([it])]), items_with_min_support))
+        tuples = [(SequenceCandidate([Element([pos])]), supp_val) for pos, supp_val in item_support.items()]
+        return tuples
 
     @staticmethod
     def _generate_candidates(

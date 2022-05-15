@@ -12,10 +12,11 @@ library(purrr)
 library(repurrrsive)
 library(tidyverse)
 
+absolute_min_support = 1
+
 
 run <- function(){
-  data_file <- '../../data.txt'
-  absolute_min_support = 2
+  data_file <- '../data.txt'
   
   source("data_processing.R")
   seqs <- read_file_and_get_sequences(data_file)
