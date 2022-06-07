@@ -13,7 +13,7 @@ class GSP:
             min_supp: int,
             min_return_length: int = 2
     ):
-        candidates_with_support = GSP._first_pass(data_sequences, min_supp)
+        candidates_with_support = GSP._first_pass(data_sequences)
 
         candidate_length = 1
         result = []
@@ -36,21 +36,17 @@ class GSP:
 
             # 3.2 Counting Candidates
             hash_tree = HashTree(pruned)
-            # hash_tree.print()
 
             supportive_sequences_set = set()
             candidates_with_support = hash_tree.count_support(data_sequences, supportive_sequences_set)
             data_sequences = list(supportive_sequences_set)
             # print(f'With support = {candidates_with_support}')
             print(f'Number of supportive sequences: {len(data_sequences)}')
-            # for s in data_sequences:
-            #     print(f'   {s}')
         return result
 
     @staticmethod
     def _first_pass(
-            data_sequences: List[Sequence],
-            min_support: int
+            data_sequences: List[Sequence]
     ):
         item_support: Dict[Item, int] = {}
         for seq in data_sequences:
