@@ -12,7 +12,7 @@ library(purrr)
 library(repurrrsive)
 library(tidyverse)
 
-absolute_min_support = 1
+absolute_min_support = 2
 
 
 run <- function(){

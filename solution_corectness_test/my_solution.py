@@ -1,7 +1,7 @@
 import sys
 
 from gsp import GSP
-from main import from_file
+from utils import from_file
 import consts
 
 if __name__ == '__main__':
@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     result = GSP.run(
         seqs,
-        min_supp=1,
+        min_supp=2,
         min_return_length=1
     )
     with_relative_support = [(v[0], v[1]/num_of_seqs) for v in result]
